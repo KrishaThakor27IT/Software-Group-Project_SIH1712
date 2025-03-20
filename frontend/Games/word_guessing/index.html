@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Guessing Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>Word Guessing Game</h1>
+        <p class="clue">Category: <span id="category"></span></p>
+        <p class="hint">Hint: <span id="hint"></span></p>
+        <p class="word-display" id="wordDisplay">_ _ _ _ _</p>
+        <div class="letter-buttons" id="letterButtons"></div>
+        <p class="message" id="message"></p>
+
+        <!-- Buttons for Play Again and Go Back -->
+        <div class="button-container">
+            <button class="play-again-btn" id="playAgainBtn">🔄 Play Again</button>
+            <button class="back-btn" id="goBackBtn">⬅ Go Back</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

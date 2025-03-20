@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Skills Enhancer - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-container">
+      <div class="login-header">
+        <h1>Interactive Skills Enhancer</h1>
+        <p>A Virtual Reality-Based Learning Tool for Children with ASD and ID</p>
+      </div>
+      
+      <div class="login-form-container">
+        <form id="login-form">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-container">
+              <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-container">
+              <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+            <div class="forgot-password">
+              <a href="#">Forgot password?</a>
+            </div>
+          </div>
+          
+          <button type="submit" class="login-button">Sign In</button>
+          
+          <div class="divider">
+            <span>or</span>
+          </div>
+          
+          <button type="button" id="google-login" class="google-button">
+            <div class="google-icon"></div>
+            Continue with Google
+          </button>
+        </form>
+      </div>
+      
+      <div class="login-footer">
+        <p>Don't have an account? <a href="#">Sign up</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

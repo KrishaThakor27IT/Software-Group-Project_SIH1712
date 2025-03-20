@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-selection">
+        <h1>Select a Game</h1>
+        <button class="game-btn" onclick="loadGame('Quiz game')">IQ Booster Quiz</button>
+        <button class="game-btn" onclick="loadGame('word_guessing')">Word Guessing</button>
+    </div>
+
+    <div class="game-container hidden" id="game-frame">
+        <iframe id="game-iframe" src="" frameborder="0"></iframe>
+        <button class="back-btn" onclick="goBack()">Back to Games</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
