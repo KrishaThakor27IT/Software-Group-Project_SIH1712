@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dstyle.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">Bright Minds</div>
+            <nav class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="D:\frontend\index.html" class="nav-link">Home</a></li>
+                    <li><a href="D:\frontend\profile\pindex.html" class="nav-link">Profile</a></li>
+                    <li><a href="#" class="nav-link">Classroom</a></li>
+                    <li><a href="#" class="nav-link">Games</a></li>
+                    <li><a href="#" class="nav-link">Dashboard</a></li>
+                </ul>
+                <a href="C:\sgp\frontend\signup\sindex.html" class="btn btn-primary header-button">Sign Up</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 80px;">
+        <header>
+            <h2>Hello, Gareth!</h2>
+            <p>We've missed you! Check out what's new.</p>
+        </header>
+
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Tasks</th>
+                    <th>Completed Tasks</th>
+                    <th>Rank Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>18</td>
+                    <td>8</td>
+                    <td>132</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="chart-container">
+            <canvas id="pieChart"></canvas>
+        </div>
+    </div>
+
+    <script src="dscript.js"></script>
+</body>
+</html>

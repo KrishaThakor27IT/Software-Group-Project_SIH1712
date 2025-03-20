@@ -1,0 +1,205 @@
+/* Global Styles */
+:root {
+    --primary-color: #00C897;
+    --primary-gradient: linear-gradient(135deg, #00C897 0%, #00E676 100%);
+    --secondary-color: #2C3E50;
+    --accent-color: #8E44AD;
+    --text-dark: #2C3E50;
+    --text-light: #666;
+    --white: #fff;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease-in-out;
+}
+
+/* Page Transition */
+body {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background: linear-gradient(135deg, rgba(0, 200, 151, 0.05) 0%, rgba(0, 230, 118, 0.05) 100%);
+}
+
+/* Button Styles */
+.btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    filter: brightness(90%);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: var(--white);
+}
+
+.btn-secondary {
+    background: var(--accent-color);
+    color: var(--white);
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+/* Header Styles */
+.header {
+    background: var(--white);
+    padding: 1rem 5%;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: var(--transition);
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: var(--text-dark);
+    text-decoration: none;
+    transition: var(--transition);
+    position: relative;
+    font-weight: 500;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gradient);
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+
+/* Dashboard Header */
+header {
+    background: linear-gradient(to right, #00FFA3, #00F4FF); /* Green gradient */
+    color: rgb(0, 0, 0);
+    padding: 1rem 5%;
+    border-radius: 12px 12px 0 0;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+/* Table Styling */
+.dashboard-table {
+    width: 100%;
+    margin: 10px 0;
+    border-collapse: collapse;
+    border: 2px solid #b3ffab;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 18px;
+}
+
+.dashboard-table th {
+    background: linear-gradient(to right, #00FFA3, #00F4FF); /* Green gradient */
+    color: black;
+    padding: 10px;
+    font-weight: bold;
+    border: 2px solid white;
+}
+
+.dashboard-table td {
+    padding: 10px;
+    border: 1px solid #b3ffab;
+    text-align: center;
+    color: black;
+    font-weight: bold;
+}
+
+/* Hover Effects */
+.dashboard-table tr:hover {
+    background: rgba(179, 255, 171, 0.3);
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.dashboard-table th:hover {
+    background: linear-gradient(to right, #12fff7, #b3ffab);
+    transition: 0.3s;
+}
+
+/* Chart Container */
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+/* Additional Hover Effects */
+.container:hover {
+    transform: scale(1.02);
+    transition: 0.3s ease-in-out;
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+canvas {
+    max-width: 100%;
+    height: auto;
+}
