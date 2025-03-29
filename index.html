@@ -360,16 +360,6 @@
                         </div>
                         <button type="submit" class="btn btn-primary btn-block">Create Account</button>
                     </form>
-                    <div id="email-verification-section" class="email-verification-section hidden">
-                        <h3>Email Verification</h3>
-                        <p>Please enter the verification code sent to your email.</p>
-                        <div class="form-group">
-                            <label for="verification-code">Verification Code</label>
-                            <input type="text" id="verification-code" class="form-input" placeholder="Enter 6-digit code" maxlength="6" pattern="[0-9]{6}">
-                        </div>
-                        <button id="verify-code-btn" class="btn btn-primary btn-block">Verify Code</button>
-                        <button id="resend-code-btn" class="btn btn-outline btn-block">Resend Code</button>
-                    </div>
                     <div class="modal-footer">
                         <p>Already have an account? <a href="#" id="switch-to-login">Login</a></p>
                     </div>
@@ -377,6 +367,32 @@
             </div>
         </div>
 
+        <!-- Verification Modal -->
+        <div id="verification-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Code Verification</h2>
+                    <button class="close-modal-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="verification-form">
+                        <div class="form-group">
+                            <label for="verification-code">Verification Code</label>
+                            <input type="text" id="verification-code" class="form-input" placeholder="Enter 6-digit code" maxlength="6" required>
+                        </div>
+                        <div class="verification-code-display">
+                            <p>Your verification code is:</p>
+                            <div class="code-box" id="code-display"></div>
+                        </div>
+                        <div class="verification-timer">
+                            <p>Code expires in: <span id="countdown">60</span>s</p>
+                        </div>
+                        <button type="button" id="resend-code-btn" class="btn btn-outline btn-block">Resend Code</button>
+                        <button type="submit" id="verify-code-btn" class="btn btn-primary btn-block">Verify Code</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <!-- Toast Messages -->
         <div id="toast-container" class="toast-container"></div>
