@@ -98,15 +98,6 @@ const saveProfileButton = document.getElementById('save-profile-button');
 // Close Modal Buttons
 const closeModalBtns = document.querySelectorAll('.close-modal-btn');
 
-// Verification Modal Elements
-const verificationModal = document.getElementById('verification-modal');
-const verificationForm = document.getElementById('verification-form');
-const verificationEmail = document.getElementById('verification-email');
-const verificationCodeSection = document.getElementById('verification-code-section');
-const verificationCode = document.getElementById('verification-code');
-const sendCodeBtn = document.getElementById('send-code-btn');
-const verifyCodeBtn = document.getElementById('verify-code-btn');
-
 // State Management
 let currentUser = null;
 let isAuthenticated = false;
@@ -127,6 +118,128 @@ let timerInterval;
 
 // API Endpoint (Replace with your actual backend URL)
 const API_URL = 'http://localhost:5000/api';
+
+// Add verification modal elements
+const verificationModal = document.getElementById('verification-modal');
+const verificationForm = document.getElementById('verification-form');
+const verificationCode = document.getElementById('verification-code');
+const codeDisplay = document.getElementById('code-display');
+const countdownDisplay = document.getElementById('countdown');
+const resendCodeBtn = document.getElementById('resend-code-btn');
+const closeModalBtn = document.querySelector('.close-modal-btn');
+
+let verificationData = null;
+let countdownInterval = null;
+
+// Generate a random 6-digit code
+function generateVerificationCode() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Start countdown timer
+function startCountdown() {
+    let timeLeft = 60;
+    countdownDisplay.textContent = timeLeft;
+    
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+    }
+    
+    countdownInterval = setInterval(() => {
+        timeLeft--;
+        countdownDisplay.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            showToast('Verification code expired. Please request a new code.', 'error');
+            verificationData = null;
+        }
+    }, 1000);
+}
+
+// Show verification modal with new code
+function showVerificationModal() {
+    const code = generateVerificationCode();
+    verificationData = {
+        code,
+        timestamp: Date.now()
+    };
+    codeDisplay.textContent = code;
+    verificationModal.classList.remove('hidden');
+    startCountdown();
+}
+
+// Handle verification form submission
+verificationForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    if (!verificationData) {
+        showToast('Please request a verification code first.', 'error');
+        return;
+    }
+    
+    const enteredCode = verificationCode.value;
+    
+    if (enteredCode === verificationData.code) {
+        clearInterval(countdownInterval);
+        showToast('Verification successful! Your account has been created.', 'success');
+        verificationModal.classList.add('hidden');
+        
+        // Create user account
+        const user = {
+            fullName: signupFullname.value,
+            username: signupUsername.value,
+            email: signupEmail.value,
+            password: signupPassword.value,
+            age: parseInt(signupAge.value),
+            createdAt: new Date().toISOString()
+        };
+        
+        // Store user in localStorage
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        users.push(user);
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Set current user and update authentication state
+        currentUser = user;
+        isAuthenticated = true;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        
+        // Initialize user progress
+        initializeUserProgress();
+        
+        // Update UI
+        updateAuthUI();
+        
+        // Close signup modal
+        closeModal(signupModal);
+        
+        // Navigate to dashboard
+        navigateTo('dashboard');
+        
+    } else {
+        showToast('Invalid code. Please try again.', 'error');
+    }
+});
+
+// Handle resend code button
+resendCodeBtn.addEventListener('click', () => {
+    showVerificationModal();
+});
+
+// Handle close modal button
+closeModalBtn.addEventListener('click', () => {
+    verificationModal.classList.add('hidden');
+    clearInterval(countdownInterval);
+});
+
+// Update signup form submission
+signupForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    // Show verification modal instead of creating account directly
+    showVerificationModal();
+});
 
 // Initialize the application
 function initApp() {
@@ -214,9 +327,6 @@ function setupEventListeners() {
   // Auth Forms
   loginForm.addEventListener('submit', handleLogin);
   signupForm.addEventListener('submit', handleSignup);
-  
-  // Verification Form
-  verificationForm.addEventListener('submit', handleVerificationSubmit);
   
   // Topics
   topicCards.forEach(card => {
@@ -338,8 +448,6 @@ function closeModal(modal) {
     loginForm.reset();
   } else if (modal === signupModal) {
     signupForm.reset();
-  } else if (modal === verificationModal) {
-    verificationForm.reset();
   }
 }
 
@@ -356,32 +464,18 @@ async function handleLogin(e) {
   }
   
   try {
-    // Mock login for demo (replace with actual API call)
-    // const response = await fetch(`${API_URL}/auth/login`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ username, password })
-    // });
+    // Get users from localStorage
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find(u => u.username === username && u.password === password);
     
-    // if (!response.ok) {
-    //   throw new Error('Invalid credentials');
-    // }
+    if (!user) {
+      throw new Error('Invalid credentials');
+    }
     
-    // const data = await response.json();
-    
-    // Mock successful login
-    const data = {
-      id: 1,
-      username: username,
-      fullName: 'Demo User',
-      email: 'demo@example.com',
-      age: 25
-    };
-    
-    // Save user data
-    currentUser = data;
+    // Save current user
+    currentUser = user;
     isAuthenticated = true;
-    localStorage.setItem('user', JSON.stringify(data));
+    localStorage.setItem('currentUser', JSON.stringify(user));
     
     // Update UI
     updateAuthUI();
@@ -397,92 +491,6 @@ async function handleLogin(e) {
   }
 }
 
-// Email Verification Functions
-function generateVerificationCode() {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-}
-
-function handleVerificationSubmit(e) {
-    e.preventDefault();
-    
-    if (e.submitter === sendCodeBtn) {
-        // Handle sending verification code
-        const email = verificationEmail.value;
-        if (!email) {
-            showToast('Error', 'Please enter your email', 'error');
-            return;
-        }
-        
-        // Check if email is already verified
-        const verifiedEmails = JSON.parse(localStorage.getItem('verifiedEmails') || '[]');
-        if (verifiedEmails.includes(email)) {
-            showToast('Success', 'Email already verified!', 'success');
-            closeModal(verificationModal);
-            if (signupForm.checkValidity()) {
-                handleSignup(new Event('submit'));
-            }
-            return;
-        }
-        
-        // Generate and store verification code
-        const code = generateVerificationCode();
-        localStorage.setItem('verificationData', JSON.stringify({
-            email,
-            code,
-            timestamp: Date.now()
-        }));
-        
-        // Show verification code section
-        verificationCodeSection.classList.remove('hidden');
-        sendCodeBtn.disabled = true;
-        
-        // For demo purposes, show the code in an alert
-        alert(`Your verification code is: ${code}`);
-        
-        showToast('Success', 'Verification code sent to your email', 'success');
-    } else if (e.submitter === verifyCodeBtn) {
-        // Handle code verification
-        const enteredCode = verificationCode.value;
-        const storedData = JSON.parse(localStorage.getItem('verificationData'));
-        
-        if (!storedData) {
-            showToast('Error', 'Please request a verification code first', 'error');
-            return;
-        }
-        
-        // Check if code has expired (5 minutes)
-        if (Date.now() - storedData.timestamp > 5 * 60 * 1000) {
-            showToast('Error', 'Verification code has expired', 'error');
-            localStorage.removeItem('verificationData');
-            verificationCodeSection.classList.add('hidden');
-            sendCodeBtn.disabled = false;
-            return;
-        }
-        
-        if (enteredCode === storedData.code) {
-            // Code is valid
-            // Add email to verified emails list
-            const verifiedEmails = JSON.parse(localStorage.getItem('verifiedEmails') || '[]');
-            if (!verifiedEmails.includes(storedData.email)) {
-                verifiedEmails.push(storedData.email);
-                localStorage.setItem('verifiedEmails', JSON.stringify(verifiedEmails));
-            }
-            
-            showToast('Success', 'Email verified successfully!', 'success');
-            localStorage.removeItem('verificationData');
-            closeModal(verificationModal);
-            
-            // If this was part of signup, proceed with account creation
-            if (signupForm.checkValidity()) {
-                handleSignup(new Event('submit'));
-            }
-        } else {
-            showToast('Error', 'Invalid verification code', 'error');
-        }
-    }
-}
-
-// Modify handleSignup to check for verified email
 async function handleSignup(e) {
     e.preventDefault();
     
@@ -497,30 +505,33 @@ async function handleSignup(e) {
         return;
     }
     
-    // Check if email is verified
-    const verifiedEmails = JSON.parse(localStorage.getItem('verifiedEmails') || '[]');
-    if (!verifiedEmails.includes(email)) {
-        // Email not verified, show verification modal
-        verificationEmail.value = email;
-        closeModal(signupModal);
-        openModal(verificationModal);
-        return;
-    }
-    
     try {
-        // Mock signup for demo (replace with actual API call)
-        const data = {
-            id: 1,
-            username: username,
-            fullName: fullName,
-            email: email,
-            age: parseInt(age)
+        // Check if username already exists
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (users.some(user => user.username === username)) {
+            showToast('Error', 'Username already exists', 'error');
+            return;
+        }
+        
+        // Create new user
+        const newUser = {
+            id: Date.now(),
+            username,
+            fullName,
+            email,
+            password,
+            age: parseInt(age),
+            createdAt: new Date().toISOString()
         };
         
-        // Save user data
-        currentUser = data;
+        // Add user to users array
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Save current user
+        currentUser = newUser;
         isAuthenticated = true;
-        localStorage.setItem('user', JSON.stringify(data));
+        localStorage.setItem('currentUser', JSON.stringify(newUser));
         
         // Initialize user progress
         initializeUserProgress();
